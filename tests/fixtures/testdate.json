@@ -1,0 +1,10 @@
+{
+    "_common": {
+        "firstName": "กนกนวล",
+        "lastName": "อินขาน",
+        "password": "1234567890",
+        "mobilePhone": "08222222222",
+        "email": "Beam1234@gmail.com",
+        "invalidEmail": ["ไทย", "invalid", "09912345678"]
+    }
+}

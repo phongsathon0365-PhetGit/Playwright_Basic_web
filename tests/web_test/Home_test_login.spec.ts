@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { login } from "../helpers/login";
 
 const baseUrl = process.env.BASE_URL!;
 const username = process.env.USERNAME!;
@@ -7,6 +8,14 @@ const password = process.env.PASSWORD!;
 test.describe("Home page tests", () => {
   test("Welcome to Kru ", async ({ page }) => {
     await page.goto(baseUrl);
+
+    await test.step("Check login page URL", async () => {
+      await expect(page).toHaveURL(baseUrl);
+      await test.info().attach("login-page", {
+        body: await page.screenshot({ fullPage: true }),
+        contentType: "image/png",
+      });
+    });
 
     await test.step("Check page title", async () => {
       await expect(page.locator("text=Welcome to Kru")).toBeVisible();
@@ -29,7 +38,9 @@ test.describe("Home page tests", () => {
       await page.fill('input[name="password"]', "validpassword");
       await page.click("#btn-login");
 
-      await expect(page.locator("text=email is a required field"),).toBeVisible();
+      await expect(
+        page.locator("text=email is a required field"),
+      ).toBeVisible();
     });
 
     await test.step("Login ไม่ใส่ password", async () => {
@@ -39,11 +50,11 @@ test.describe("Home page tests", () => {
       await page.fill('input[name="password"]', "");
       await page.click("#btn-login");
 
-      await expect(page.locator("text=password must be at least 5 characters"),).toBeVisible();
+      await expect(
+        page.locator("text=password must be at least 5 characters"),
+      ).toBeVisible();
     });
   });
-
- 
 
   test("Login ไม่ใส่ทั้ง email และ password ", async ({ page }) => {
     await test.step("Login ทั้ง email และ password ไม่ใส่", async () => {
@@ -53,8 +64,12 @@ test.describe("Home page tests", () => {
       await page.fill('input[name="password"]', "");
       await page.click("#btn-login");
 
-      await expect(page.locator("text=email is a required field"),).toBeVisible();
-      await expect(page.locator("text=password must be at least 5 characters"),).toBeVisible();
+      await expect(
+        page.locator("text=email is a required field"),
+      ).toBeVisible();
+      await expect(
+        page.locator("text=password must be at least 5 characters"),
+      ).toBeVisible();
     });
   });
 
@@ -62,11 +77,11 @@ test.describe("Home page tests", () => {
     await test.step("Login ทั้ง email และ password ถูกต้อง", async () => {
       await page.goto(baseUrl);
 
-      await page.fill("#email", username);
-      await page.fill('input[name="password"]', password);
-      await page.click("#btn-login");
+      await login(page, username, password);
 
-      await expect(page.getByRole("link", { name: "Kru P' Beam" }),).toBeVisible();
+      await expect(
+        page.getByRole("link", { name: "Kru P' Beam" }),
+      ).toBeVisible();
       await expect(page).toHaveURL(/user\/list/);
     });
   });
